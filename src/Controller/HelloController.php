@@ -28,14 +28,31 @@ class HelloController extends AbstractController
        ]);
     }
 
-      /**
-       * @Route("/find/{id}", name="find")
-       */
-public function find(Request $request, Person $person)
+/**
+ * @Route("/find", name="find")
+ */
+public function find(Request $request)
 {
+    $formobj = new FindForm();
+    $form = $this->createFormBuilder($formobj)
+        ->add('find', TextType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'))
+        ->getForm();
+
+
+    if ($request->getMethod() == 'POST'){
+        $form->handleRequest($request);
+        $findstr = $form->getData()->getFind();
+        $repository = $this->getDoctrine()
+            ->getRepository(Person::class);
+        $result = $repository->findByName($findstr);
+    } else {
+        $result = null;
+    }
     return $this->render('hello/find.html.twig', [
         'title' => 'Hello',
-        'data' => $person,
+        'form' => $form->createView(),
+        'data' => $result,
     ]);
 }
 
