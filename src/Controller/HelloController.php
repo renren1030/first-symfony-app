@@ -17,7 +17,7 @@ class HelloController extends AbstractController
     /**
      * @Route("/hello", name="hello")
      */
-    public function index(Request $request)
+    public function index(Request $request)　//$requestとは？
     {
         $repository = $this->getDoctrine()
             ->getRepository(Person::class);
